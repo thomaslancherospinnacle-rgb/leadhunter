@@ -853,7 +853,7 @@ function renderList() {
       </div>
       <div class="lc-meta">
         ${lead.address ? esc(lead.address) + '<br>' : ''}
-        ${lead.phone   ? esc(lead.phone)   + '<br>' : ''}
+        ${lead.phone   ? `<a href="tel:${esc(lead.phone)}" onclick="event.stopPropagation()" style="color:var(--blue);text-decoration:none;">${esc(lead.phone)}</a><br>` : ''}
       </div>
       <div class="lc-tags">
         ${!lead.hasWebsite ? '<span class="tag tag-red">No Website</span>' : '<span class="tag tag-blue">Has Website</span>'}
@@ -897,7 +897,7 @@ function openDetail(id) {
     : `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent([lead.name, lead.address, lead.city, lead.state].filter(Boolean).join(' '))}`;
 
   document.getElementById('d-contact').innerHTML = `
-    ${lead.phone   ? `<div class="info-row"><span class="info-icon">📞</span><span class="info-val">${esc(lead.phone)}</span></div>` : '<div class="info-row"><span class="info-icon">📞</span><span class="info-val" style="color:var(--muted)">No phone listed</span></div>'}
+    ${lead.phone   ? `<div class="info-row"><span class="info-icon">📞</span><span class="info-val"><a href="tel:${esc(lead.phone)}" style="color:var(--blue);text-decoration:none;">${esc(lead.phone)}</a></span></div>` : '<div class="info-row"><span class="info-icon">📞</span><span class="info-val" style="color:var(--muted)">No phone listed</span></div>'}
     ${lead.address ? `<div class="info-row"><span class="info-icon">📍</span><span class="info-val">${esc(lead.address)}</span></div>` : ''}
     <div class="info-row"><span class="info-icon">🌐</span><span class="info-val">${
       lead.hasWebsite
