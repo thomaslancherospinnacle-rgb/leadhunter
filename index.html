@@ -130,6 +130,168 @@ body {
 
 .main { display: flex; flex: 1; overflow: hidden; }
 
+/* ── Mobile Bottom Nav ────────────────────────────────────── */
+.mobile-bottom-nav {
+  display: none;
+  position: fixed;
+  bottom: 0; left: 0; right: 0;
+  height: 60px;
+  background: var(--bg1);
+  border-top: 1px solid var(--border);
+  z-index: 200;
+  justify-content: space-around;
+  align-items: center;
+  padding-bottom: env(safe-area-inset-bottom);
+}
+.mobile-nav-btn {
+  display: flex; flex-direction: column; align-items: center; gap: 3px;
+  flex: 1; height: 100%;
+  justify-content: center;
+  background: transparent; border: none;
+  color: var(--muted);
+  font-family: 'Space Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+  transition: color 0.15s;
+}
+.mobile-nav-btn .mnb-icon { font-size: 18px; line-height: 1; }
+.mobile-nav-btn.active { color: var(--green); }
+
+/* ── Mobile Topbar Actions ────────────────────────────────── */
+.mobile-menu-btn {
+  display: none;
+  background: transparent;
+  border: none;
+  color: var(--muted);
+  font-size: 20px;
+  cursor: pointer;
+  padding: 8px;
+  margin-left: auto;
+}
+
+/* Mobile action drawer */
+.mobile-drawer {
+  display: none;
+  position: fixed;
+  top: 54px; right: 0;
+  width: 220px;
+  background: var(--bg1);
+  border: 1px solid var(--border);
+  border-radius: 0 0 0 12px;
+  z-index: 300;
+  flex-direction: column;
+  padding: 8px;
+  gap: 4px;
+  box-shadow: -4px 4px 20px rgba(0,0,0,0.5);
+}
+.mobile-drawer.open { display: flex; }
+.mobile-drawer .btn { width: 100%; justify-content: flex-start; }
+
+/* Mobile detail slide-in panel */
+.mobile-detail-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 150;
+  background: rgba(0,0,0,0.5);
+}
+.mobile-detail-overlay.open { display: block; }
+
+/* ── Mobile media queries ─────────────────────────────────── */
+@media (max-width: 700px) {
+  /* hide desktop nav, show mobile bottom nav */
+  .nav { display: none; }
+  .topbar-right { display: none; }
+  .mobile-menu-btn { display: flex; align-items: center; }
+  .mobile-bottom-nav { display: flex; }
+
+  /* push content above bottom nav */
+  .app { padding-bottom: 60px; }
+
+  /* topbar compact */
+  .topbar { padding: 0 14px; gap: 10px; height: 50px; }
+  .logo { font-size: 15px; }
+
+  /* stats bar: horizontal scroll */
+  .stats-bar {
+    overflow-x: auto;
+    flex-wrap: nowrap;
+    -webkit-overflow-scrolling: touch;
+  }
+  .stat-cell { min-width: 80px; padding: 8px 10px; }
+  .stat-val { font-size: 18px; }
+  .stat-lbl { font-size: 9px; }
+
+  /* sidebar takes full width */
+  .sidebar {
+    width: 100% !important;
+    min-width: unset !important;
+    border-right: none;
+  }
+  /* hide desktop detail panel */
+  .detail { display: none !important; }
+
+  /* detail panel becomes full-screen slide-up sheet */
+  #detail-content,
+  #detail-empty {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 60px;
+    z-index: 160;
+    background: var(--bg);
+    transform: translateY(100%);
+    transition: transform 0.3s cubic-bezier(0.4,0,0.2,1);
+    display: flex !important;
+    flex-direction: column;
+    overflow: hidden;
+  }
+  #detail-content.mobile-open,
+  #detail-empty.mobile-open {
+    transform: translateY(0);
+  }
+
+  /* back button inside detail on mobile */
+  .mobile-back-bar {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--border);
+    background: var(--bg1);
+    flex-shrink: 0;
+  }
+  .mobile-back-btn {
+    background: transparent;
+    border: none;
+    color: var(--green);
+    font-size: 14px;
+    font-weight: 700;
+    font-family: 'Syne', sans-serif;
+    cursor: pointer;
+    display: flex; align-items: center; gap: 6px;
+  }
+
+  /* detail body stacks to 1 col */
+  .detail-body { grid-template-columns: 1fr; padding: 14px; gap: 14px; }
+  .detail-section.full { grid-column: 1; }
+
+  /* detail footer wraps */
+  .detail-footer { flex-wrap: wrap; gap: 6px; padding: 10px 14px; }
+  .detail-footer .btn { font-size: 11px; padding: 7px 10px; }
+
+  /* pipeline: horizontal scroll */
+  .pipeline-view { padding: 12px; gap: 10px; }
+  .pipe-col { min-width: 200px; }
+
+  /* filter chips scroll */
+  .filter-row { flex-wrap: nowrap; overflow-x: auto; -webkit-overflow-scrolling: touch; padding-bottom: 2px; }
+  .filter-chip { white-space: nowrap; }
+
+  /* lead cards bigger tap targets */
+  .lead-card { padding: 13px 14px; }
+  .lc-name { font-size: 14px; }
+}
+
 /* ── Sidebar ──────────────────────────────────────────────── */
 .sidebar {
   width: 320px;
@@ -358,6 +520,9 @@ body {
   flex-shrink: 0;
   background: var(--bg1);
 }
+
+/* Hide mobile back bar on desktop */
+.mobile-back-bar { display: none; }
 
 /* ── Pipeline view ────────────────────────────────────────── */
 .pipeline-view {
@@ -593,6 +758,17 @@ body {
       <button class="btn btn-ghost" onclick="openSettings()">⚙</button>
       <button class="btn btn-primary" onclick="refreshLeads()">↻ Refresh</button>
     </div>
+    <!-- Mobile: sync status + menu -->
+    <span class="lh-sync-status" id="sync-status-mobile" style="display:none;font-size:9px;"></span>
+    <button class="mobile-menu-btn" onclick="toggleMobileDrawer()" aria-label="Menu">⋮</button>
+  </div>
+
+  <!-- Mobile action drawer -->
+  <div class="mobile-drawer" id="mobile-drawer">
+    <button class="btn btn-ghost" onclick="refreshLeads();closeMobileDrawer()">↻ Refresh</button>
+    <button class="btn btn-ghost" onclick="syncSheets();closeMobileDrawer()">☁ Sync Sheets</button>
+    <button class="btn btn-ghost" onclick="exportCSV();closeMobileDrawer()">⬇ Export CSV</button>
+    <button class="btn btn-ghost" onclick="openSettings();closeMobileDrawer()">⚙ Settings</button>
   </div>
 
   <!-- STATS BAR -->
@@ -636,6 +812,11 @@ body {
           <div style="font-size:10px;color:var(--muted2)">Scan Google Maps first, then refresh</div>
         </div>
         <div id="detail-content" style="display:none;flex:1;flex-direction:column;overflow:hidden;display:none;">
+          <!-- Mobile back bar -->
+          <div class="mobile-back-bar">
+            <button class="mobile-back-btn" onclick="closeMobileDetail()">‹ Back</button>
+            <span id="d-name-mobile" style="font-size:13px;font-weight:700;color:var(--text);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;"></span>
+          </div>
           <div class="detail-header">
             <div class="detail-name" id="d-name"></div>
             <div class="detail-sub" id="d-sub"></div>
@@ -686,6 +867,19 @@ body {
 
   </div>
 </div>
+
+<!-- Mobile Bottom Navigation -->
+<nav class="mobile-bottom-nav">
+  <button class="mobile-nav-btn active" data-view="leads" onclick="setView('leads')">
+    <span class="mnb-icon">🎯</span>Leads
+  </button>
+  <button class="mobile-nav-btn" data-view="pipeline" onclick="setView('pipeline')">
+    <span class="mnb-icon">📊</span>Pipeline
+  </button>
+  <button class="mobile-nav-btn" data-view="history" onclick="setView('history')">
+    <span class="mnb-icon">📂</span>History
+  </button>
+</nav>
 
 <!-- SETTINGS MODAL -->
 <div class="modal-overlay" id="settings-modal">
@@ -880,6 +1074,9 @@ function openDetail(id) {
   content.style.flexDirection = 'column';
 
   document.getElementById('d-name').textContent = lead.name;
+  // Mobile name in back bar
+  const mobileNameEl = document.getElementById('d-name-mobile');
+  if (mobileNameEl) mobileNameEl.textContent = lead.name;
 
   // Sub line
   const sub = document.getElementById('d-sub');
@@ -921,6 +1118,11 @@ function openDetail(id) {
   document.getElementById('d-maps-btn').onclick = () => window.open(mapsUrl, '_blank');
   document.getElementById('d-google-btn').onclick = () => window.open(googleSearchUrl, '_blank');
 
+  // On mobile: slide up the detail panel
+  if (window.innerWidth <= 700) {
+    document.getElementById('detail-content').classList.add('mobile-open');
+  }
+
   renderList(); // re-render to highlight selected
 }
 
@@ -956,6 +1158,8 @@ function deleteLead() {
   saveData();
   renderAll();
 
+  document.getElementById('detail-content').classList.remove('mobile-open');
+  document.getElementById('detail-empty').classList.remove('mobile-open');
   document.getElementById('detail-empty').style.display = 'flex';
   document.getElementById('detail-content').style.display = 'none';
   toast('🗑 Lead deleted', 'warn');
@@ -1101,6 +1305,7 @@ function bindNav() {
 function setView(view) {
   activeView = view;
   document.querySelectorAll('.nav-btn').forEach(b => b.classList.toggle('active', b.dataset.view === view));
+  document.querySelectorAll('.mobile-nav-btn').forEach(b => b.classList.toggle('active', b.dataset.view === view));
   document.getElementById('view-leads').style.display    = view === 'leads'    ? 'flex' : 'none';
   document.getElementById('view-pipeline').classList.toggle('active', view === 'pipeline');
   document.getElementById('view-history').classList.toggle('active', view === 'history');
@@ -1245,6 +1450,9 @@ function setSyncStatus(msg, type) {
   const el = document.getElementById('sync-status');
   el.textContent = msg;
   el.className = 'lh-sync-status' + (type ? ' ' + type : '');
+  // Also update mobile sync indicator
+  const mob = document.getElementById('sync-status-mobile');
+  if (mob) { mob.textContent = msg; mob.className = 'lh-sync-status' + (type ? ' ' + type : ''); }
 }
 
 function lkey(l) {
@@ -1359,9 +1567,42 @@ document.getElementById('settings-modal').onclick = function(e) {
 };
 
 // ─────────────────────────────────────────────────────────────
+// MOBILE HELPERS
+// ─────────────────────────────────────────────────────────────
+function closeMobileDetail() {
+  document.getElementById('detail-content').classList.remove('mobile-open');
+  document.getElementById('detail-empty').classList.remove('mobile-open');
+  selectedId = null;
+  renderList();
+}
+
+function toggleMobileDrawer() {
+  document.getElementById('mobile-drawer').classList.toggle('open');
+}
+function closeMobileDrawer() {
+  document.getElementById('mobile-drawer').classList.remove('open');
+}
+
+// Close drawer when tapping outside
+document.addEventListener('click', function(e) {
+  const drawer = document.getElementById('mobile-drawer');
+  if (drawer.classList.contains('open') && !drawer.contains(e.target) && !e.target.closest('.mobile-menu-btn')) {
+    drawer.classList.remove('open');
+  }
+});
+
+// Show/hide mobile sync status
+function syncMobileStatusVisibility() {
+  const mob = document.getElementById('sync-status-mobile');
+  if (mob) mob.style.display = window.innerWidth <= 700 ? 'inline' : 'none';
+}
+window.addEventListener('resize', syncMobileStatusVisibility);
+
+// ─────────────────────────────────────────────────────────────
 // BOOT
 // ─────────────────────────────────────────────────────────────
 init();
+syncMobileStatusVisibility();
 </script>
 </body>
 </html>
